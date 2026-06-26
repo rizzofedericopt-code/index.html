@@ -140,6 +140,9 @@ input.mono{font-family:var(--mono)}
 .row2{display:flex;gap:9px}.row2>*{flex:1}
 .psec{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:20px 0 4px;border-bottom:1px solid var(--line);padding-bottom:6px}
 .medflag{color:var(--down);font-weight:700}
+.pcheck{display:flex;align-items:flex-start;gap:11px;padding:10px 0;cursor:pointer;font-size:13.5px;line-height:1.4;border-bottom:1px solid var(--line)}
+.pcheck input{width:20px;height:20px;flex:0 0 auto;accent-color:var(--accent);margin-top:0;cursor:pointer}
+.pcheck span{color:var(--text);padding-top:1px}
 .hist{margin-top:6px;border:1px solid var(--line);border-radius:11px;overflow:hidden}
 .hrow{display:flex;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);font-size:13px}
 .hrow:last-child{border-bottom:none}
@@ -853,23 +856,66 @@ const PROFILE=[
   {k:"height",  l:"Altezza (cm)",    t:"number", half:true},
   {k:"weight",  l:"Peso (kg)",       t:"number", half:true},
   {k:"role",    l:"Ruolo / posizione", t:"text"},
+
   {sec:"Programmazione"},
   {k:"experience", l:"Esperienza di allenamento", t:"select", o:["","Principiante (<1 anno)","Intermedio (1-3 anni)","Avanzato (3-5 anni)","Esperto (5+ anni)"]},
   {k:"daysWeek",   l:"Giorni/settimana disponibili", t:"number", half:true},
   {k:"seasonPhase",l:"Fase di stagione", t:"select", o:["","Off-season","Pre-season","In-season","Transizione"], half:true},
+  {k:"sportYears", l:"Anni di pratica dello sport", t:"number", half:true},
+  {k:"prevSports", l:"Sport praticati in passato", t:"text", half:true},
   {k:"goal",       l:"Obiettivo principale", t:"text"},
   {k:"equipment",  l:"Attrezzatura disponibile", t:"text"},
-  {sec:"Anamnesi & salute"},
-  {k:"injuriesCurrent", l:"Infortuni / dolori attuali", t:"area"},
-  {k:"injuriesPast",    l:"Infortuni e operazioni passate", t:"area"},
-  {k:"conditions",      l:"Patologie / condizioni croniche", t:"area"},
-  {k:"painAreas",       l:"Limitazioni di mobilità / zone critiche", t:"area"},
-  {k:"meds",            l:"Farmaci / integratori rilevanti", t:"area"},
-  {k:"medical",         l:"Idoneità medica agonistica", t:"select", o:["","Idoneo","In attesa","Non idoneo"], half:true},
-  {k:"medicalExpiry",   l:"Scadenza certificato", t:"date", half:true},
-  {k:"notes",           l:"Note libere", t:"area"}
-];
 
+  {sec:"Stile di vita (anamnesi fisiologica)"},
+  {k:"job",         l:"Lavoro / studio (sedentario o fisico)", t:"text"},
+  {k:"sleepHours",  l:"Ore di sonno medie", t:"number", half:true},
+  {k:"sleepQuality",l:"Qualità del sonno", t:"select", o:["","Buona","Discreta","Scarsa"], half:true},
+  {k:"smoke",       l:"Fumo", t:"select", o:["","No","Ex fumatore","Sì"], half:true},
+  {k:"alcohol",     l:"Alcol", t:"select", o:["","No / raro","Moderato","Frequente"], half:true},
+  {k:"stressLife",  l:"Stress di vita percepito", t:"select", o:["","Basso","Medio","Alto"], half:true},
+  {k:"cycle",       l:"Ciclo mestruale (atlete)", t:"select", o:["","Regolare","Irregolare","Assente / amenorrea","N/A"], half:true},
+  {k:"nutrition",   l:"Alimentazione / note dietetiche", t:"area"},
+
+  {sec:"Anamnesi patologica"},
+  {k:"conditions",   l:"Patologie / condizioni croniche (cardio, respiratorie, metaboliche, tiroide…)", t:"area"},
+  {k:"surgeries",    l:"Interventi chirurgici / ospedalizzazioni", t:"area"},
+  {k:"familyHistory",l:"Familiarità (cardiovascolare, metabolica…)", t:"area"},
+
+  {sec:"Anamnesi muscolo-scheletrica & infortuni"},
+  {k:"injuriesCurrent", l:"Infortuni / dolori ATTUALI (zona, da quando)", t:"area"},
+  {k:"painLevel",       l:"Dolore attuale (0-10)", t:"number", half:true},
+  {k:"painContext",     l:"Il dolore compare", t:"select", o:["","A riposo","Sotto carico","Dopo l'attività","N/A"], half:true},
+  {k:"injuriesPast",    l:"Infortuni e operazioni passate (zona, tipo, anno, esiti)", t:"area"},
+  {k:"recurrent",       l:"Zone fragili / recidive note", t:"area"},
+  {k:"painAreas",       l:"Limitazioni di mobilità / ROM", t:"area"},
+  {k:"orthoNotes",      l:"Note ortopediche / prehab (es. pre-operatorio)", t:"area"},
+
+  {sec:"Screening rapido — segna ciò che è positivo"},
+  {k:"scHeart",    l:"Diagnosi o sospetto di problemi cardiaci", t:"check"},
+  {k:"scChest",    l:"Dolore al petto sotto sforzo", t:"check"},
+  {k:"scDizzy",    l:"Vertigini o svenimenti", t:"check"},
+  {k:"scBreath",   l:"Affanno anomalo a riposo o sforzo lieve", t:"check"},
+  {k:"scJoint",    l:"Problema osseo/articolare aggravato dall'attività", t:"check"},
+  {k:"scFamily",   l:"Familiarità per eventi cardiaci precoci", t:"check"},
+  {k:"scMedsHeart",l:"Assume farmaci per cuore o pressione", t:"check"},
+
+  {sec:"Farmaci & allergie"},
+  {k:"meds",        l:"Farmaci in uso", t:"area"},
+  {k:"supplements", l:"Integratori", t:"area"},
+  {k:"allergies",   l:"Allergie / intolleranze", t:"area"},
+
+  {sec:"Idoneità & consenso"},
+  {k:"medical",      l:"Idoneità medica agonistica", t:"select", o:["","Idoneo","In attesa","Non idoneo"], half:true},
+  {k:"medicalExpiry",l:"Scadenza certificato", t:"date", half:true},
+  {k:"consent",      l:"Consenso al trattamento dei dati (genitori se minore)", t:"check"},
+  {k:"notes",        l:"Note libere del preparatore", t:"area"}
+];
+const SCREEN_KEYS=["scHeart","scChest","scDizzy","scBreath","scJoint","scFamily","scMedsHeart"];
+
+function checkField(f,p){
+  const on=!!(p&&p[f.k]);
+  return '<label class="pcheck"><input type="checkbox" id="p_'+f.k+'"'+(on?' checked':'')+'><span>'+f.l+'</span></label>';
+}
 function profileField(f, p){
   const v = (p && p[f.k]!=null) ? p[f.k] : "";
   const ev = String(v).replace(/"/g,"&quot;");
@@ -907,6 +953,9 @@ function openAthlete(id){
   const _sport=(_team&&_team.sport)||"generale";
   const kb=SPORTKB[_sport]||SPORTKB.generale;
   h+='<button class="gbtn" onclick="openCoachBrief(\''+id+'\')">📋 Guida preparazione — '+kb.label+(a.profile&&a.profile.role?' · '+esc(a.profile.role):'')+'</button>';
+  const _flags=SCREEN_KEYS.filter(k=>p[k]).length;
+  if(_flags) h+='<div class="alert danger" style="margin-top:10px"><span class="ai">⚠️</span><span>'+
+    '<b>Screening: '+_flags+' voce/i positive.</b> Consigliata una verifica medica prima di proporre carichi intensi.</span></div>';
   // sezioni profilo
   let i=0;
   while(i<PROFILE.length){
@@ -918,6 +967,8 @@ function openAthlete(id){
       h+='<div class="row2"><div><label class="fl">'+f.l+'</label>'+profileField(f,p)+'</div>'+
          '<div><label class="fl">'+next.l+'</label>'+profileField(next,p)+'</div></div>';
       i+=2;
+    } else if(f.t==="check"){
+      h+=checkField(f,p); i++;
     } else {
       h+='<label class="fl">'+f.l+'</label>'+(f.k==="role"?roleInput(p,kb):profileField(f,p)); i++;
     }
@@ -933,7 +984,10 @@ function saveAthleteEdit(id){
   const n=document.getElementById("eN").value.trim(); if(!n){ toast("Inserisci un nome"); return; }
   a.name=n; a.team=document.getElementById("eT").value||null; a.sex=document.getElementById("eS").value;
   const p={};
-  PROFILE.forEach(f=>{ if(f.sec) return; const el=document.getElementById("p_"+f.k); if(el){ const v=el.value.trim(); if(v) p[f.k]=v; } });
+  PROFILE.forEach(f=>{ if(f.sec) return; const el=document.getElementById("p_"+f.k); if(!el) return;
+    if(f.t==="check"){ if(el.checked) p[f.k]=true; }
+    else { const v=el.value.trim(); if(v) p[f.k]=v; }
+  });
   a.profile=p;
   save(); closeM(); render(); toast("Scheda salvata");
 }
